@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-app
+  template:
+    metadata:
+      labels:
+        app: demo-app
+    spec:
+      containers:
+      - name: demo-app
+        image: app-test
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DJANGO_KEY
+          valueFrom:
+            secretKeyRef:
+              name: django-key
+              key: DJANGO_PASSWORD
+        - name: DATABASE_NAME
+          value: db.sqlite3
+        resources:
+          requests:
+            cpu: "100m"
+          limits:
+            cpu: "500m"    
